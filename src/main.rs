@@ -79,9 +79,12 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::user::register)
             .service(handlers::user::logout)
             .service(
-                web::scope("api")
+                web::scope("public")
                     .service(get_books)
-                    .service(get_single_book)
+                    .service(get_single_book),
+            )
+            .service(
+                web::scope("api")
                     .wrap(from_fn(handlers::auth::auth_user))
                     .service(handlers::user::me)
                     .service(handlers::books::cloudinary_sign)
