@@ -18,6 +18,11 @@ mod models;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    if let Err(_) = dotenvy::dotenv() {
+        println!(
+            ".env file not found, loading variables from system environment (Hugging Face Secrets)."
+        );
+    }
     dotenvy::dotenv().ok();
     println!("Env load ok!");
 
