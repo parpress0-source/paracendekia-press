@@ -78,17 +78,17 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::user::login_email)
             .service(handlers::user::register)
             .service(handlers::user::logout)
+            .service(get_books)
+            .service(get_single_book)
             .service(
                 web::scope("api")
                     .wrap(from_fn(handlers::auth::auth_user))
                     .service(handlers::user::me)
                     .service(handlers::books::cloudinary_sign)
                     .service(create_book)
-                    .service(get_books)
                     .service(update_book)
                     .service(delete_cloudinary_image)
-                    .service(delete_book)
-                    .service(get_single_book),
+                    .service(delete_book),
             )
     })
     .bind(("0.0.0.0", 7860))?
