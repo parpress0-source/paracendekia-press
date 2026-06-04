@@ -55,9 +55,13 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")
+            .allowed_origin("https://parpress.pcn.ac.id/")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE", "OPTIONS"])
-            .allowed_headers(vec!["Content-Type", "Authorization"])
+            .allowed_headers(vec![
+                actix_web::http::header::CONTENT_TYPE,
+                actix_web::http::header::AUTHORIZATION,
+                actix_web::http::header::ACCEPT,
+            ])
             .supports_credentials();
         App::new()
             .wrap(cors)
@@ -65,8 +69,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(IdentityMiddleware::builder().build())
             .wrap(
                 SessionMiddleware::builder(session_store.clone(), key.clone())
-                    .cookie_secure(false)
-                    .cookie_same_site(actix_web::cookie::SameSite::Lax)
+                    .cookie_secure(true)
+                    .cookie_same_site(actix_web::cookie::SameSite::None)
                     .session_lifecycle(PersistentSession::default().session_ttl(Duration::days(7)))
                     .build(),
             )
