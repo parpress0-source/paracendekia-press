@@ -19,7 +19,7 @@ mod models;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenvy::dotenv().ok();
-    print!("Env load ok!");
+    println!("Env load ok!");
 
     let pool = match db::db().await {
         Ok(pool) => {
@@ -35,14 +35,17 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
+    println!("Database ok");
+
     let secret_key = std::env::var("SECRET_KEY").expect("SECRET_KEY not found");
 
+    println!("secret_key ok");
     let key = Key::from(secret_key.as_bytes());
-
+    println!("key ok!");
     let redis_url = std::env::var("REDIS_URL").expect("REDIS_URL not found");
-
+    println!("redis url ok!");
     let session_store = RedisSessionStore::new(redis_url).await.unwrap();
-
+    println!("session store ok!");
     println!("Start Server");
 
     HttpServer::new(move || {
